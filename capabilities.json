@@ -4,17 +4,44 @@
             "displayName": "Measure",
             "name": "measure",
             "kind": "Measure"
+        },
+        {
+            "displayName": "Low Value",
+            "name": "lowValue",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "High Value",
+            "name": "highValue",
+            "kind": "Measure"
         }
     ],
     "dataViewMappings": [
         {
             "conditions": [
-                { "measure": { "max": 1 } }
+                {
+                    "measure": {
+                        "max": 1
+                    },
+                    "lowValue": {
+                        "max": 1
+                    },
+                    "highValue": {
+                        "max": 1
+                    }
+                }
             ],
-            "single": {
-                "role": "measure"
+            "categorical": {
+                "values": {
+                        "select": [
+                            {"bind": {"to": "measure"}},
+                            {"bind": {"to": "lowValue"}},
+                            {"bind": {"to": "highValue"}}
+                        ]
+                    }
+                }
             }
-        }
     ],
+    "objects": {},
     "privileges": []
 }

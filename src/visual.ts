@@ -66,10 +66,10 @@ export class Visual implements IVisual {
         let categoricalDataView: DataViewCategorical = dataView.categorical;
         let width: number = options.viewport.width;
         let height: number = options.viewport.height;
-        let percentage:number = <number>dataView.single.value;
-        //let lowThreshold: number = <number>categoricalDataView.categories.values[1]; 
-        //let highThreshold: number = <number>categoricalDataView.categories.values[2]; 
-
+        let percentage: number = <number>categoricalDataView.values[0].values[0];
+        //let percentage: number = <number>0.75;
+        let lowValue: number = <number>categoricalDataView.values[1].values[0] || .8; // Fallback if undefined
+        let highValue: number = <number>categoricalDataView.values[2].values[0] || .9; // Fallback if undefined
 
         this.svg.attr("width", width);
         this.svg.attr("height", height);
@@ -84,20 +84,21 @@ export class Visual implements IVisual {
             .attr("cy", height / 2);
         let fontSizeValue: number = Math.min(width, height) / 5;
         this.textValue
-            .text(<string>dataView.single.value)
-            .attr("x", "50%")
-            .attr("y", "50%")
-            .attr("dy", "0.35em")
-            .attr("text-anchor", "middle")
-            .style("font-size", fontSizeValue + "px");
-        let fontSizeLabel: number = fontSizeValue / 4;
-        this.textLabel
-            .text(dataView.metadata.columns[0].displayName)
-            .attr("x", "50%")
-            .attr("y", height / 2)
-            .attr("dy", fontSizeValue / 1.2)
-            .attr("text-anchor", "middle")
-            .style("font-size", fontSizeLabel + "px");
+        .text((percentage * 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%') // Format as percentage
+        .attr("x", "50%")
+        .attr("y", height / 2 - fontSizeValue / 4) // Position above textLabel
+        .attr("dy", "0.35em")
+        .attr("text-anchor", "middle")
+        .style("font-size", fontSizeValue + "px");
+
+    let fontSizeLabel: number = fontSizeValue / 4;
+    this.textLabel
+        .text("test")
+        .attr("x", "50%")
+        .attr("y", height / 2 + fontSizeLabel / 2) // Position below textValue
+        .attr("dy", fontSizeValue / 1.2)
+        .attr("text-anchor", "middle")
+        .style("font-size", fontSizeLabel + "px");
         // Percentage calculation
         let startAngle = 0;
         let endAngle = (percentage) * 2 * Math.PI; // Convert percentage to radians

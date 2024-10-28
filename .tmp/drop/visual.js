@@ -66,9 +66,10 @@ class Visual {
         let categoricalDataView = dataView.categorical;
         let width = options.viewport.width;
         let height = options.viewport.height;
-        let percentage = dataView.single.value;
-        //let lowThreshold: number = <number>categoricalDataView.categories.values[1]; 
-        //let highThreshold: number = <number>categoricalDataView.categories.values[2]; 
+        let percentage = categoricalDataView.values[0].values[0];
+        //let percentage: number = <number>0.75;
+        let lowValue = categoricalDataView.values[1].values[0] || .8; // Fallback if undefined
+        let highValue = categoricalDataView.values[2].values[0] || .9; // Fallback if undefined
         this.svg.attr("width", width);
         this.svg.attr("height", height);
         let radius = Math.min(width, height) / 2.2;
@@ -82,17 +83,17 @@ class Visual {
             .attr("cy", height / 2);
         let fontSizeValue = Math.min(width, height) / 5;
         this.textValue
-            .text(dataView.single.value)
+            .text((percentage * 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%') // Format as percentage
             .attr("x", "50%")
-            .attr("y", "50%")
+            .attr("y", height / 2 - fontSizeValue / 4) // Position above textLabel
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
             .style("font-size", fontSizeValue + "px");
         let fontSizeLabel = fontSizeValue / 4;
         this.textLabel
-            .text(dataView.metadata.columns[0].displayName)
+            .text("test")
             .attr("x", "50%")
-            .attr("y", height / 2)
+            .attr("y", height / 2 + fontSizeLabel / 2) // Position below textValue
             .attr("dy", fontSizeValue / 1.2)
             .attr("text-anchor", "middle")
             .style("font-size", fontSizeLabel + "px");
