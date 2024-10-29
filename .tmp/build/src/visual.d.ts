@@ -12,5 +12,6 @@ export declare class Visual implements IVisual {
     private textLabel;
     private percentageArc;
     constructor(options: VisualConstructorOptions);
+    private splitTextIntoLines;
     update(options: VisualUpdateOptions): void;
 }

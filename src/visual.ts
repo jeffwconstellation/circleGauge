@@ -60,6 +60,23 @@ export class Visual implements IVisual {
         this.percentageArc = this.container.append("path")
             .classed("percentageArc", true);
     }
+    private splitTextIntoLines(text: string, maxLineLength: number): string[] {
+        let words = text.split(" ");
+        let lines: string[] = [];
+        let currentLine = "";
+
+        words.forEach(word => {
+            if ((currentLine + word).length > maxLineLength) {
+                lines.push(currentLine.trim());
+                currentLine = word + " ";
+            } else {
+                currentLine += word + " ";
+            }
+        });
+
+        lines.push(currentLine.trim());
+        return lines;
+    }
 
     public update(options: VisualUpdateOptions) {
         let dataView: DataView = options.dataViews[0]
@@ -81,32 +98,52 @@ export class Visual implements IVisual {
 
         this.svg.attr("width", width);
         this.svg.attr("height", height);
+
         let radius: number = Math.min(width, height) / 2.2;
+
         this.circle
             .style("fill", "white")
             .style("fill-opacity", 0.5)
             .style("stroke", "lightgray")
-            .style("stroke-width", 12)
+            .style("stroke-width", 16)
             .attr("r", radius)
             .attr("cx", width / 2)
             .attr("cy", height / 2);
-        let fontSizeValue: number = Math.min(width, height) / 5;
+
+        let fontSizeValue: number = Math.min(width, height) / 6;
+
         this.textValue
-            .text((percentage * 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%') // Format as percentage
+            .text((percentage * 100).toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%') // Format as percentage
             .attr("x", "50%")
-            .attr("y", height / 2 - fontSizeValue / 4) // Position above textLabel
+            .attr("y", height / 2.2 - fontSizeValue / 4) // Position above textLabel
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
-            .style("font-size", fontSizeValue + "px");
+            .style("font-size", fontSizeValue + "px")
+            .style("font-family", "calibri");
 
-        let fontSizeLabel: number = fontSizeValue / 4;
-        this.textLabel
-            .text(<string>categoricalDataView.values[3].values[0])
-            .attr("x", "50%")
-            .attr("y", height / 2 + fontSizeLabel / 2) // Position below textValue
-            .attr("dy", fontSizeValue / 1.2)
-            .attr("text-anchor", "middle")
-            .style("font-size", fontSizeLabel + "px");
+        let fontSizeLabel: number = fontSizeValue / 2;
+
+        // Split the text into multiple lines
+        let textLabel: string = <string>categoricalDataView.values[3].values[0];
+        let lines: string[] = this.splitTextIntoLines(textLabel, 20); // Adjust the max line length as needed
+
+        // Remove any existing text labels
+        this.container.selectAll(".textLabel").remove();
+
+        // Add each line of text as a separate text element
+        lines.forEach((line, index) => {
+            this.container.append("text")
+                .classed("textLabel", true)
+                .text(line)
+                .attr("x", "50%")
+                .attr("y", height / 2.4 + fontSizeLabel / 2 + (index * fontSizeLabel)) // Adjust the y position for each line
+                .attr("dy", fontSizeValue / 1.2)
+                .attr("text-anchor", "middle")
+                .style("font-size", fontSizeLabel + "px")
+                .style("font-family", "calibri")
+                .style("font-weight", "bold");
+        });
+
         // Percentage calculation
         let startAngle = 0;
         let endAngle = (percentage) * 2 * Math.PI; // Convert percentage to radians
@@ -124,7 +161,7 @@ export class Visual implements IVisual {
         } else if (percentage < highValue) {
             strokeColor = "yellow"; // Between low and high threshold
         } else {
-            strokeColor = "green"; // Above high threshold
+            strokeColor = "limegreen"; // Above high threshold
         }
 
         this.percentageArc
@@ -132,7 +169,7 @@ export class Visual implements IVisual {
             .attr("transform", `translate(${width / 2}, ${height / 2})`)
             .style("fill", "none") // No fill
             .style("stroke", strokeColor) // Set stroke color
-            .style("stroke-width", 12); // Adjust stroke width as needed
+            .style("stroke-width", 16); // Adjust stroke width as needed
 
     }
 }

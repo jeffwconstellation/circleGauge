@@ -61,6 +61,22 @@ class Visual {
         this.percentageArc = this.container.append("path")
             .classed("percentageArc", true);
     }
+    splitTextIntoLines(text, maxLineLength) {
+        let words = text.split(" ");
+        let lines = [];
+        let currentLine = "";
+        words.forEach(word => {
+            if ((currentLine + word).length > maxLineLength) {
+                lines.push(currentLine.trim());
+                currentLine = word + " ";
+            }
+            else {
+                currentLine += word + " ";
+            }
+        });
+        lines.push(currentLine.trim());
+        return lines;
+    }
     update(options) {
         let dataView = options.dataViews[0];
         let categoricalDataView = dataView.categorical;
@@ -84,26 +100,38 @@ class Visual {
             .style("fill", "white")
             .style("fill-opacity", 0.5)
             .style("stroke", "lightgray")
-            .style("stroke-width", 4)
+            .style("stroke-width", 16)
             .attr("r", radius)
             .attr("cx", width / 2)
             .attr("cy", height / 2);
-        let fontSizeValue = Math.min(width, height) / 5;
+        let fontSizeValue = Math.min(width, height) / 6;
         this.textValue
-            .text((percentage * 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%') // Format as percentage
+            .text((percentage * 100).toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%') // Format as percentage
             .attr("x", "50%")
-            .attr("y", height / 2 - fontSizeValue / 4) // Position above textLabel
+            .attr("y", height / 2.2 - fontSizeValue / 4) // Position above textLabel
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
-            .style("font-size", fontSizeValue + "px");
-        let fontSizeLabel = fontSizeValue / 4;
-        this.textLabel
-            .text(categoricalDataView.values[3].values[0])
-            .attr("x", "50%")
-            .attr("y", height / 2 + fontSizeLabel / 2) // Position below textValue
-            .attr("dy", fontSizeValue / 1.2)
-            .attr("text-anchor", "middle")
-            .style("font-size", fontSizeLabel + "px");
+            .style("font-size", fontSizeValue + "px")
+            .style("font-family", "calibri");
+        let fontSizeLabel = fontSizeValue / 2;
+        // Split the text into multiple lines
+        let textLabel = categoricalDataView.values[3].values[0];
+        let lines = this.splitTextIntoLines(textLabel, 20); // Adjust the max line length as needed
+        // Remove any existing text labels
+        this.container.selectAll(".textLabel").remove();
+        // Add each line of text as a separate text element
+        lines.forEach((line, index) => {
+            this.container.append("text")
+                .classed("textLabel", true)
+                .text(line)
+                .attr("x", "50%")
+                .attr("y", height / 2.4 + fontSizeLabel / 2 + (index * fontSizeLabel)) // Adjust the y position for each line
+                .attr("dy", fontSizeValue / 1.2)
+                .attr("text-anchor", "middle")
+                .style("font-size", fontSizeLabel + "px")
+                .style("font-family", "calibri")
+                .style("font-weight", "bold");
+        });
         // Percentage calculation
         let startAngle = 0;
         let endAngle = (percentage) * 2 * Math.PI; // Convert percentage to radians
@@ -121,14 +149,14 @@ class Visual {
             strokeColor = "yellow"; // Between low and high threshold
         }
         else {
-            strokeColor = "green"; // Above high threshold
+            strokeColor = "limegreen"; // Above high threshold
         }
         this.percentageArc
             .attr("d", arcGenerator)
             .attr("transform", `translate(${width / 2}, ${height / 2})`)
             .style("fill", "none") // No fill
             .style("stroke", strokeColor) // Set stroke color
-            .style("stroke-width", 12); // Adjust stroke width as needed
+            .style("stroke-width", 16); // Adjust stroke width as needed
     }
 }
 
