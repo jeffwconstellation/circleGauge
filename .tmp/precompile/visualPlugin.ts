@@ -7,7 +7,7 @@ var powerbiKey: any = "powerbi";
 var powerbi: any = window[powerbiKey];
 var circleGaugeC0EDC83DAA804B1C9EA179579AF4E968_DEBUG: IVisualPlugin = {
     name: 'circleGaugeC0EDC83DAA804B1C9EA179579AF4E968_DEBUG',
-    displayName: 'CircleGauge',
+    displayName: 'Circle Gauge',
     class: 'Visual',
     apiVersion: '5.3.0',
     create: (options?: VisualConstructorOptions) => {
