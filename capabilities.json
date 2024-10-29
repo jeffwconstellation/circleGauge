@@ -14,6 +14,11 @@
             "displayName": "High Value",
             "name": "highValue",
             "kind": "Measure"
+        },
+        {
+            "displayName": "KPI Description",
+            "name": "description",
+            "kind": "Measure"
         }
     ],
     "dataViewMappings": [
@@ -28,6 +33,9 @@
                     },
                     "highValue": {
                         "max": 1
+                    },
+                    "description": {
+                        "max": 1
                     }
                 }
             ],
@@ -36,7 +44,8 @@
                         "select": [
                             {"bind": {"to": "measure"}},
                             {"bind": {"to": "lowValue"}},
-                            {"bind": {"to": "highValue"}}
+                            {"bind": {"to": "highValue"}},
+                            {"bind": {"to": "description"}}
                         ]
                     }
                 }

@@ -64,6 +64,13 @@ class Visual {
     update(options) {
         let dataView = options.dataViews[0];
         let categoricalDataView = dataView.categorical;
+        if (categoricalDataView.values[0].values[0] == null || categoricalDataView.values[0].values[0] === 0) {
+            this.svg.style("display", "none"); // Hide the visual
+            return; // Exit early
+        }
+        else {
+            this.svg.style("display", "block"); // Show the visual
+        }
         let width = options.viewport.width;
         let height = options.viewport.height;
         let percentage = categoricalDataView.values[0].values[0];
@@ -91,7 +98,7 @@ class Visual {
             .style("font-size", fontSizeValue + "px");
         let fontSizeLabel = fontSizeValue / 4;
         this.textLabel
-            .text("test")
+            .text(categoricalDataView.values[3].values[0])
             .attr("x", "50%")
             .attr("y", height / 2 + fontSizeLabel / 2) // Position below textValue
             .attr("dy", fontSizeValue / 1.2)
@@ -107,10 +114,10 @@ class Visual {
             .endAngle(endAngle);
         let strokeColor = "green";
         // Calculate stroke color dynamically based on the percentage and thresholds
-        if (percentage < .8) {
+        if (percentage < lowValue) {
             strokeColor = "red"; // Below low threshold
         }
-        else if (percentage < .9) {
+        else if (percentage < highValue) {
             strokeColor = "yellow"; // Between low and high threshold
         }
         else {

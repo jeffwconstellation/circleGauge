@@ -44,7 +44,7 @@ export class Visual implements IVisual {
     private textValue: Selection<SVGElement>;
     private textLabel: Selection<SVGElement>;
     private percentageArc: Selection<SVGElement>;
-    
+
     constructor(options: VisualConstructorOptions) {
         this.svg = d3.select(options.element)
             .append('svg')
@@ -60,10 +60,18 @@ export class Visual implements IVisual {
         this.percentageArc = this.container.append("path")
             .classed("percentageArc", true);
     }
-    
+
     public update(options: VisualUpdateOptions) {
         let dataView: DataView = options.dataViews[0]
         let categoricalDataView: DataViewCategorical = dataView.categorical;
+
+        if (<number>categoricalDataView.values[0].values[0] == null || <number>categoricalDataView.values[0].values[0] === 0) {
+            this.svg.style("display", "none"); // Hide the visual
+            return; // Exit early
+        } else {
+            this.svg.style("display", "block"); // Show the visual
+        }
+
         let width: number = options.viewport.width;
         let height: number = options.viewport.height;
         let percentage: number = <number>categoricalDataView.values[0].values[0];
@@ -78,27 +86,27 @@ export class Visual implements IVisual {
             .style("fill", "white")
             .style("fill-opacity", 0.5)
             .style("stroke", "lightgray")
-            .style("stroke-width", 4)
+            .style("stroke-width", 12)
             .attr("r", radius)
             .attr("cx", width / 2)
             .attr("cy", height / 2);
         let fontSizeValue: number = Math.min(width, height) / 5;
         this.textValue
-        .text((percentage * 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%') // Format as percentage
-        .attr("x", "50%")
-        .attr("y", height / 2 - fontSizeValue / 4) // Position above textLabel
-        .attr("dy", "0.35em")
-        .attr("text-anchor", "middle")
-        .style("font-size", fontSizeValue + "px");
+            .text((percentage * 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%') // Format as percentage
+            .attr("x", "50%")
+            .attr("y", height / 2 - fontSizeValue / 4) // Position above textLabel
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "middle")
+            .style("font-size", fontSizeValue + "px");
 
-    let fontSizeLabel: number = fontSizeValue / 4;
-    this.textLabel
-        .text("test")
-        .attr("x", "50%")
-        .attr("y", height / 2 + fontSizeLabel / 2) // Position below textValue
-        .attr("dy", fontSizeValue / 1.2)
-        .attr("text-anchor", "middle")
-        .style("font-size", fontSizeLabel + "px");
+        let fontSizeLabel: number = fontSizeValue / 4;
+        this.textLabel
+            .text(<string>categoricalDataView.values[3].values[0])
+            .attr("x", "50%")
+            .attr("y", height / 2 + fontSizeLabel / 2) // Position below textValue
+            .attr("dy", fontSizeValue / 1.2)
+            .attr("text-anchor", "middle")
+            .style("font-size", fontSizeLabel + "px");
         // Percentage calculation
         let startAngle = 0;
         let endAngle = (percentage) * 2 * Math.PI; // Convert percentage to radians
@@ -109,11 +117,11 @@ export class Visual implements IVisual {
             .endAngle(endAngle);
         let strokeColor: string = "green";
 
-    
+
         // Calculate stroke color dynamically based on the percentage and thresholds
-        if (percentage < .8) {
+        if (percentage < lowValue) {
             strokeColor = "red"; // Below low threshold
-        } else if (percentage < .9) {
+        } else if (percentage < highValue) {
             strokeColor = "yellow"; // Between low and high threshold
         } else {
             strokeColor = "green"; // Above high threshold
@@ -125,5 +133,6 @@ export class Visual implements IVisual {
             .style("fill", "none") // No fill
             .style("stroke", strokeColor) // Set stroke color
             .style("stroke-width", 12); // Adjust stroke width as needed
+
     }
 }
