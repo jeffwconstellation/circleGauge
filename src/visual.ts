@@ -99,18 +99,7 @@ export class Visual implements IVisual {
         this.svg.attr("width", width);
         this.svg.attr("height", height);
 
-        let radius: number = Math.min(width, height) / 2.2;
-
-        this.circle
-            .style("fill", "white")
-            .style("fill-opacity", 0.5)
-            .style("stroke", "lightgray")
-            .style("stroke-width", 16)
-            .attr("r", radius)
-            .attr("cx", width / 2)
-            .attr("cy", height / 2);
-
-        let fontSizeValue: number = Math.min(width, height) / 6;
+        let fontSizeValue: number = Math.min(width, height) / 7;
 
         this.textValue
             .text((percentage * 100).toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%') // Format as percentage
@@ -125,7 +114,7 @@ export class Visual implements IVisual {
 
         // Split the text into multiple lines
         let textLabel: string = <string>categoricalDataView.values[3].values[0];
-        let lines: string[] = this.splitTextIntoLines(textLabel, 20); // Adjust the max line length as needed
+        let lines: string[] = this.splitTextIntoLines(textLabel, 16); // Adjust the max line length as needed
 
         // Remove any existing text labels
         this.container.selectAll(".textLabel").remove();
@@ -143,6 +132,22 @@ export class Visual implements IVisual {
                 .style("font-family", "calibri")
                 .style("font-weight", "bold");
         });
+
+        //Radius calc for cirle and arc
+        let radius: number = Math.min(width, height) / 2.2;
+
+        //Stroke size calculation
+        let arcStroke: number = Math.min(width, height) * 0.06;
+
+        this.circle
+            .style("fill", "white")
+            .style("fill-opacity", 0.5)
+            .style("stroke", "lightgray")
+            .style("stroke-width", arcStroke)
+            .attr("r", radius)
+            .attr("cx", width / 2)
+            .attr("cy", height / 2);
+
 
         // Percentage calculation
         let startAngle = 0;
@@ -169,7 +174,7 @@ export class Visual implements IVisual {
             .attr("transform", `translate(${width / 2}, ${height / 2})`)
             .style("fill", "none") // No fill
             .style("stroke", strokeColor) // Set stroke color
-            .style("stroke-width", 16); // Adjust stroke width as needed
+            .style("stroke-width", arcStroke); // Adjust stroke width as needed
 
     }
 }

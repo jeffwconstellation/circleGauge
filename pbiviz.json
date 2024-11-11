@@ -4,7 +4,7 @@
         "displayName": "Circle Gauge",
         "guid": "circleGaugeC0EDC83DAA804B1C9EA179579AF4E968",
         "visualClassName": "Visual",
-        "version": "1.0.0.0",
+        "version": "1.0.0.1",
         "description": "Dynamic Circle Gauge for KPIs",
         "supportUrl": "https://github.com/jeffwconstellation/circleGauge.git",
         "gitHubUrl": "https://github.com/jeffwconstellation/circleGauge.git"
