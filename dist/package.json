@@ -1,5 +1,5 @@
 {
-		"version": "1.0.0.1",
+		"version": "1.0.0.2",
 		"author": {"name":"Jeff Williams","email":"jeff.williams@constellationservice.com"},
 		"resources": [
 			{
@@ -8,7 +8,7 @@
 				"file": "resources/circleGaugeC0EDC83DAA804B1C9EA179579AF4E968.pbiviz.json"
 			}
 		],
-		"visual": {"name":"circleGauge","displayName":"Circle Gauge","guid":"circleGaugeC0EDC83DAA804B1C9EA179579AF4E968","visualClassName":"Visual","version":"1.0.0.1","description":"Dynamic Circle Gauge for KPIs","supportUrl":"https://github.com/jeffwconstellation/circleGauge.git","gitHubUrl":"https://github.com/jeffwconstellation/circleGauge.git"},
+		"visual": {"name":"circleGauge","displayName":"Circle Gauge","guid":"circleGaugeC0EDC83DAA804B1C9EA179579AF4E968","visualClassName":"Visual","version":"1.0.0.2","description":"Dynamic Circle Gauge for KPIs","supportUrl":"https://github.com/jeffwconstellation/circleGauge.git","gitHubUrl":"https://github.com/jeffwconstellation/circleGauge.git"},
 		"metadata": {
 			"pbivizjson": {
 				"resourceId": "rId0"
