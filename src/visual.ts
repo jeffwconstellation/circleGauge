@@ -99,7 +99,7 @@ export class Visual implements IVisual {
         this.svg.attr("width", width);
         this.svg.attr("height", height);
 
-        let fontSizeValue: number = Math.min(width, height) / 7;
+        let fontSizeValue: number = Math.min(width, height) / 5.75;
 
         this.textValue
             .text((percentage * 100).toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%') // Format as percentage
